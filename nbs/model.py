@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Cargar la imagen
-image_path = 'imgs/marbling.jpg'
+image_path = 'imgs/001.jpg'
 image = cv2.imread(image_path)
 
 # Convertir la imagen a escala de grises

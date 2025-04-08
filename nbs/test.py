@@ -4,7 +4,7 @@ import torch
 from segment_anything import sam_model_registry, SamPredictor
 
 # Cargar imagen
-image_path = '../imgs/marbling.jpg'  # <- Cambiá esto por la ruta real
+image_path = '../imgs/001.jpg'  # <- Cambiá esto por la ruta real
 image = cv2.imread(image_path)
 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
