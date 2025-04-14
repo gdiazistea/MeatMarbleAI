@@ -27,40 +27,58 @@ Estas categorías determinan el valor de mercado del corte y su uso en restauran
 El marmoleo no se mide en todos los cortes, sino en una zona específica del animal: el **ribeye** entre la **12.ª y 13.ª costilla**, que actúa como indicador representativo del canal completo. Por eso, el modelo se aplica exclusivamente a imágenes de ese corte.
 
 
-## 📌 ¿Qué hace este proyecto?
-
-- Remueve el fondo de las imágenes para enfocarse únicamente en el corte de carne.
-- Aplica técnicas de procesamiento en HSV para generar máscaras precisas de:
-  - **Carne** (en tonos rojizos)
-  - **Grasa** (en tonos claros)
-- Genera un dataset de entrenamiento compatible con modelos de segmentación semántica como **DeepLabV3+**.
-- Guarda las máscaras en formato PNG con clases diferenciadas por valores (0: fondo, 1: carne, 2: grasa).
-- Calcula la proporción de grasa respecto al total para análisis posteriores.
-
-
 ## 🧠 Objetivo
 
-Entrenar un modelo de segmentación que detecte con precisión el marmoleo en distintos tipos de cortes de carne, utilizando un dataset generado a partir de imágenes reales procesadas con técnicas de visión por computadora.
+Entrenar un modelo de segmentación que detecte con precisión el marmoleo en distintos cortes de carne, utilizando un dataset generado a partir de imágenes reales procesadas con técnicas de visión por computadora.
+
+## 📌 ¿Qué hace este proyecto?
+
+- **Adquisición de Imágenes**  
+  Se utilizan imágenes del corte *ribeye*, obtenidas específicamente entre la 12.ª y 13.ª costilla. Se recomienda el uso de imágenes en formato PNG con una resolución homogénea para asegurar la calidad del dataset.
+
+- **Anotación de Grasa Intramuscular**  
+  Se emplea la herramienta **Labelbox** para realizar anotaciones manuales que segmenten la grasa presente dentro del tejido muscular. Estas anotaciones permiten entrenar modelos con supervisión precisa.
+
+- **Segmentación Automática**  
+  A partir de las anotaciones, se entrena un modelo de segmentación semántica (por ejemplo, **U-Net** o **DeepLabV3+**) que identifica automáticamente las regiones de grasa intramuscular en nuevas imágenes.
+
+- **Cálculo de Métricas**  
+  Una vez segmentadas las imágenes, se calcula la proporción de grasa respecto al área total del músculo, así como la densidad y la distribución de los islotes grasos. Estas métricas son clave para la evaluación objetiva del marmoleo.
+
+- **Clasificación según USDA**  
+  Basándose en las métricas extraídas, se realiza una predicción de la calidad del corte conforme a los estándares del sistema USDA:  
+  - ≥13% de grasa → **USDA Prime**  
+  - 4–13% de grasa → **USDA Choice**  
+  - <4% de grasa → **USDA Select**
+
+- **Aplicaciones y Visualización**  
+  Los resultados pueden ser utilizados en sistemas automatizados de inspección, visualizados mediante dashboards o integrados en procesos de aseguramiento de calidad industrial.
+
 
 ## 🔄 Pipeline del Proyecto
 
-## 🔄 Pipeline del Proyecto
+El siguiente diagrama muestra el flujo de trabajo del proyecto, desde la adquisición de imágenes hasta la clasificación de calidad según los estándares USDA:
 
 ```mermaid
 flowchart TD
-    A[1. Imagen del Ribeye\n(corte entre costilla 12 y 13)]
-    B[2. Anotación Manual\n(grasa intramuscular)]
-    C[3. Entrenamiento del Modelo\n(de segmentación)]
-    D[4. Segmentación Automática\n(máscara de grasa)]
-    E[5. Cálculo de Métricas\n(% grasa, densidad)]
-    F[6. Clasificación de Calidad\n(según USDA)]
-
+    Start([Inicio])
+    
+    A[Imagen del Ribeye<br/>(costilla 12-13)]
+    B[Anotación Manual<br/>(grasa intramuscular)]
+    C[Entrenamiento del Modelo<br/>de Segmentación]
+    D[Segmentación Automática<br/>(máscara de grasa)]
+    E[Cálculo de Métricas<br/>(% grasa, densidad)]
+    F[Clasificación USDA<br/>(Prime / Choice / Select)]
+    
+    End([Fin])
+    
+    Start --> A
     A --> B
     B --> C
     C --> D
     D --> E
     E --> F
-
-
+    F --> End
+```
 
 
